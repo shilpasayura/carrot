@@ -1,0 +1,1010 @@
+<!DOCTYPE HTML>
+<html> 
+<head> 
+<title>EATcarot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" > 
+<meta name="keywords" content="Carrot Eating Game" /> 
+<meta name="description" content="Eat Carrot to get points" />
+<meta name="author" content="Niranjan Meegammana, Prabhashana Hasthidara, Shilpa Sayura Foundation" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" > 
+<meta http-equiv="CACHE-CONTROL" CONTENT="NO-CACHE">
+<meta http-equiv="PRAGMA" CONTENT="NO-CACHE">
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        
+<meta property="fb:app_id"          content="1587716054877021" /> 
+<meta property="og:type"            content="game" /> 
+<meta property="og:url" content="https://shilpasayura.com/dev/carrot/">
+<meta property="og:title" content="Eat Carrot to get points"/>
+<meta property="og:image" content="https://shilpasayura.com/dev/carrot/icon.png"/>
+<meta property="og:description" content="Eat Carrot to get points"/>
+
+<style>
+
+@font-face {
+    font-family: KaputaUnicode;
+	src:url('fonts/kaputaunicode.ttf') format('truetype');
+}
+
+html, body {
+	font-family: Roboto,KaputaUnicode, sans-serief, FontAwesome; 
+	background: #000;
+	color:#fff;
+	background-image:url('images/background.png');
+	height: 100%;
+	font-size:1.1em;
+}
+
+#xpage{
+overflow:hidden;
+width:100%;
+text-align:center;
+}
+#splash{
+	width:33%;
+	height:400px;
+	margin:auto;
+	background:#127ca8;
+	background:url(icon.png);
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	animation: spinY 3s;
+	cursor:pointer;
+}
+
+@keyframes spinY {
+  0% {
+    transform: rotateY(180deg);;
+  }
+
+  100% {
+    transform: rotateY(0deg);;
+  }
+  
+}
+
+@keyframes enterR {
+  0% {
+    transform: rotateX(90deg);;
+  }
+
+  25% {
+    transform: rotateX(90deg);;
+  }
+  
+  100% {
+    transform: rotateY(0deg);;
+  }
+  
+}
+
+
+#ctrlpanel{
+position:absolute;
+z-index:10;
+top:300px;
+left:300px;
+text-align:center;
+width:320px;
+height:180px;
+margin:auto;
+margin-bottom:0px;
+margin-top:0px;
+opacity:.5;
+}
+
+
+.btnimgx{
+width:60px;
+height:60px;
+}
+
+.btn{
+width:80px;
+height:60px;
+display:inline-block;
+}
+
+#xtimer{
+position:absolute;
+z-index:11;
+top:20px;
+left:5px;
+width:100px;
+font-size:1.5em;
+}
+
+.v-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+   transform: translateY(-50%);
+}
+
+#leftArrow1{
+background-image:url('images/leftarrow.png');
+}
+
+#downArrow1{
+background-image:url('images/downarrow.png');
+}
+#upArrow1{
+background-image:url('images/uparrow.png');
+}
+#rightArrow1{
+background-image:url('images/rightarrow.png');
+}
+
+.displaynone{
+display:none;
+}
+
+.xcenter{
+text-align:center;
+}
+
+#xfooter{
+text-align:center;
+color:#e1e1e1;
+font-size:.6em;
+margin-top:5px;
+}
+
+#xfooter a:link, a:visited {
+color:#e1e1e1;
+font-weight:normal;
+text-decoration: none;
+}
+#xfooter a:hover, a:active {
+    color: #f3f3f0;
+	text-decoration: none;
+}
+
+
+</style>
+<script>
+
+var apphost='http://yesmedia.club/';
+var xstarted=false;
+function getpage(xpage){
+xpage=xpage+".html";
+location.href=xpage;
+}
+
+function soundClick(){
+var audio = new Audio('chimes.mp3');
+audio.play();
+}
+
+function startx(){
+	if (xstarted==false){
+		start(true);
+	}
+}
+
+function start(first){
+xstarted=true;
+if (first==true){
+	document.getElementById("splash").style.display="none";
+	calcControls();
+	el=document.getElementById("xpage");
+	removeClass(el, 'displaynone');
+	startgame();
+	//mainmenu(first);
+}
+
+}
+
+function hasClass(el, className) {
+  if (el.classList)
+    return el.classList.contains(className)
+  else
+    return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+}
+
+function addClass(el, className) {
+  if (el.classList)
+    el.classList.add(className)
+  else if (!hasClass(el, className)) el.className += " " + className
+}
+
+function removeClass(el, className) {
+  if (el.classList)
+    el.classList.remove(className)
+  else if (hasClass(el, className)) {
+    var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
+    el.className=el.className.replace(reg, ' ')
+  }
+}
+
+
+
+function showhide(xdiv){
+	if (document.getElementById(xdiv).style.visibility=="visible"){
+		document.getElementById(xdiv).style.visibility="";
+	}else {
+		document.getElementById(xdiv).style.visibility="visible";
+	}
+}
+
+function displaydiv(xparent,xchild){
+	
+    if (xchild=="maindiv"){
+		athome=true;
+	}
+	else{
+		athome=false;
+		//document.getElementById("xpage").style.webkitAnimationPlayState = "paused";
+	}
+	var x=document.getElementById(xchild).innerHTML;
+	document.getElementById(xparent).innerHTML=x;
+	activechild=xchild;
+	
+	if (xchild=="obadiv"){
+		setBfcastDefaults()
+	}
+	else{
+		if (xchild=="adadiv"){
+		
+			setTRNDefaults()
+		}
+		else{
+			if (xchild=="hetadiv"){
+				setFFDefaults()
+			}
+			else{
+			//none
+			}
+		}
+	}
+}
+
+var athome=true;
+var device;
+var acticon;
+var lastopacity;
+
+	
+var datanames=["dnm", "dpn", "dbd", "dtm","dam", "dtz", "dlt", "dln", "dx1","dx2","dx3","dx4","dx5"];
+var dnm, dpn, dbd, dtm, dam, dtz, dlt, dln, dx1,dx2,dx3,dx4,dx5;
+var dataf= "Karet.2.0_ssnm_7";
+var xuser="guest";
+
+function saveGame(dataf){
+var data="";
+for(var i = 0; i < datanames.length; i++) {   
+        data +='"'+ datanames[i] + '":"' + eval(datanames[i]) + '",';    
+    }
+data='[{' + data + '"user":"'+ xuser + '"}]';
+//console.log(data);
+localStorage[dataf] = data;
+}
+
+function loadData(dataf){ // show films
+var data= localStorage[dataf];
+     
+    //console.log(data);
+    if (typeof data !== "undefined")  {
+        objGame = JSON.parse(data);
+        for(var i = 0; i < datanames.length; i++) {
+            expr=datanames[i] + "=objGame[0]." + datanames[i];
+            val=eval(expr);
+            console.log(datanames[i] + " " + eval(datanames[i]));
+        }
+        //console.log(elapsed);
+        //xuser=objGame[0].xuser;
+        fixData();  
+    }
+    else{
+        saveGame(dataf);
+    }
+}
+
+function fixData(){
+        //data type fixes for  json to var
+		//uname, uphone, ustdate, uelapsed, utries, ulstchk, unextchk, usucess,ulstupd
+        //uelapsed=parseInt(uelapsed);
+       // utries=parseFloat(utries);
+        //usucess=parseInt(usucess);
+}
+
+
+
+
+
+function getUrl(url){
+location.href=url;
+}
+function home(){
+mainmenu();
+}
+
+function homeDIV(){
+displaydiv('ux','svgmapdiv');
+}
+
+function back(e){
+javascript:history.back();
+}
+function xclose(){
+x=3;
+javascript:window.close();
+}
+
+function mainmenu(first){
+
+
+var ele=document.getElementById("xheaderitems");
+document.getElementById("xheader").appendChild(ele);
+var ele2=document.getElementById("cpanelitems");
+document.getElementById("cpanel").appendChild(ele2);
+}
+
+var winWidth, winHeight,appWidth, appHeight, svgHeight, ifrwidth,ifrheight, appr, dispmode;
+
+function setSize(){
+winWidth = window.innerWidth;
+winHeight = window.innerHeight;
+
+//BlackBerry OS	7.0.0.579	320	505
+//Android	4.1.1	360	598
+//Android	4.0.3	480	800
+//winWidth = 600;
+//winHeight = 900;
+
+if (winWidth > winHeight) { //computer
+		if  (winHeight < 600) {
+			appHeight=parseInt(winWidth * 1.1)  ;
+			appWidth=winWidth;
+			dispmode=0;
+		}
+		else{
+			appHeight=parseInt(winHeight *.90)  ;
+			appWidth=parseInt(appHeight * .75 );
+			dispmode=1;
+		}
+		
+}
+else{
+	    
+   appWidth=parseInt(winWidth * 0.97);
+   appHeight=parseInt(winHeight * 0.90);
+   dispmode=2;
+}
+		document.getElementById("xpage").style.width=appWidth + "px";
+		document.getElementById("xpage").style.height=appHeight + "px";
+		document.getElementById("ux").style.width=appWidth  + "px";
+		document.getElementById("ux").style.height=(appHeight - 75) + "px";
+		ifrWidth=appWidth  + "px";
+		ifrHeight=appHeight-75 + "px";
+		
+		//alert(winWidth);
+		//alert(winHeight);
+		//alert(appWidth);
+		//alert(svgHeight);
+		
+		if (winWidth < 500){ // small phones
+			document.body.style.fontSize="1.0em";
+			//inputfontSize="1.0em";
+		}
+		else {
+			if (winWidth < 600){ //sony experia
+				document.body.style.fontSize="1.4em";
+	
+			}
+			else {
+				if (winWidth > 600){ //sony experia
+					document.body.style.fontSize="1.5em";
+				}
+			}
+		}
+		
+}
+
+
+function init(first){
+//setSize();
+//soundClick();
+loadKeys();
+setTimeout(startx, 3000);
+}
+</script>
+</head>
+<body onload="init(true)"> 
+
+<div id="splash" onclick="start(true)"></div>
+<div id="xpage" class="container displaynone">
+<div id="ux"></div>
+<div id="ctrlpanel">
+	<div>
+		<div id="upArrow" class="btn clearR"><img class="btnimgx" src="images/uparrow.png"></div>
+	</div>
+	<div>
+			<div id="leftArrow" class="btn"><img class="btnimgx" src="images/leftarrow.png"></div>
+			<div  class="btn"></div>
+			<div id="rightArrow" class="btn"><img class="btnimgx" src="images/rightarrow.png"></div>
+	</div>
+	<div>
+		<div id="downArrow" class="btn"><img class="btnimgx" src="images/downarrow.png"></div>
+	</div>
+</div>
+<div id="xtimer"></div>	
+
+<div id="xfooter">
+<span class="legal">&copy; Shilpa Sayura</span>
+<span class="legal">
+ - <a href="#" onclick="displaydiv('ux','aboutdiv');return false;">About</a>   
+- <a href="#" onclick="getUrl('privacy.html');">Privacy</a> - 
+<a href="#" onclick="getUrl('terms.html');">Terms</a></span>
+<br/>
+<small>For Entertainment Purpose Only</small>
+</div>	
+
+</div>
+<script >
+var maxCatch=3;		
+var starting=1;
+var splashcount=0;
+
+var heroWO=60; //original
+var heroHO=60; //original
+var heroW=heroWO;
+var heroH=heroHO;
+var heroDx=heroW/2;
+var heroDy=heroH/2;
+var monstW=40;
+var monstH=60;
+var monDx=monstW/2;
+var giftW=180;
+var giftH=253;
+var oldKey=0;
+var nowKey=0;
+
+
+
+var stopW = new Stopwatch();
+
+// Create the canvas - canvas is x y cordinate space. we use it like math
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext("2d");
+canvas.setAttribute("id", "gamecanvas"); 
+canvas.setAttribute('style', 'border: 4px solid green'); 
+canvas.width = window.innerWidth; // width of the canvas
+canvas.height = window.innerHeight-20;
+
+canvas.addEventListener("click", function (e) {
+    var clickedX = e.pageX - this.offsetLeft;
+    var clickedY = e.pageY - this.offsetTop;
+    //console.log(clickedX, clickedY );
+		hero.x1=hero.x + heroW;
+		hero.y1=hero.x + heroH;
+        if (clickedX < hero.x1 && clickedX > hero.x && clickedY > hero.y && clickedY < hero.y1) {
+            console.log('clicked hero ');
+			starting=1;
+			monstersCaught=0;
+			startgame();
+        }
+		
+});
+
+ux.appendChild(canvas);
+
+//document.body.appendChild(canvas); // add the canvas to HTML body
+//add audio  - should be done when doc loaded under onload event
+var audioElement;
+audioElement = document.createElement("audio");
+document.body.appendChild(audioElement);
+audioElement.setAttribute("src", "sounds/eat_food.mp3");
+
+// Loading Background image
+var bgReady = false; // bgReady is justopWa variable initially set to false
+var bgImage = new Image(); // create a new image object instance named bgImage an object variable
+bgImage.onload = function () { // calls when the 
+	bgReady = true;
+	// repeatly draw background
+    for (var w = 0; w < canvas.width; w += bgImage.width) {
+        for (var h = 0; h < canvas.height; h  += bgImage.height) {
+            ctx.drawImage(bgImage, w, h);
+        }
+    }
+};
+bgImage.src = "images/background.png";  // load an image to the bgImage object
+
+var giftReady = false;
+var giftImage = new Image();
+ giftImage.onload = function () {
+		giftReady = true;
+ };
+ giftImage.src = "images/carrot.png";
+	
+// Same for Hero image
+var heroReady = false;
+var heroImage = new Image();
+heroImage.onload = function () {
+	heroReady = true;
+
+};
+heroImage.src = "images/hero.png";
+
+// Same for monster/ villan image
+var monsterReady = false;
+var monsterImage = new Image();
+monsterImage.onload = function () {
+	monsterReady = true;
+};
+monsterImage.src = "images/monster.png";
+
+var splashReady = false;
+var splashImage = new Image();
+splashImage.onload = function () {
+	splashReady = true;
+};
+splashImage.src = "images/splash.png";
+
+// Create Game objects & data in 
+var hero = {
+	speed: 256, // movement in pixels per second
+	points:0,
+	level:0
+};
+var monster = {}; // monster has no info
+var monstersCaught = 0; // 
+
+// Handle keyboard controls
+var keysDown = {}; // the key array variable to keep key states
+// listen to keys  and set variables 
+
+var raKey=39;
+var laKey=37;
+var uaKey=38;
+var daKey=40;
+
+/*
+key codes
+left arrow	37
+up arrow	38
+right arrow	39
+down arrow	40
+*/
+
+
+
+addEventListener("keydown", function (e) {
+    if (nowKey > 0 ){
+		delete keysDown[nowKey];
+	}
+    nowKey=e.keyCode;
+	keysDown[nowKey] = true;  // the key pressed set true  keycode of arrow keys
+}, false);
+
+addEventListener("keyup", function (e) {
+    nowKey=e.keyCode;
+	delete keysDown[e.keyCode]; // deleted the key instances - can improve this using 1 & 0 :)
+	nowKey=0;
+}, false);
+
+
+
+// Reset the game when the player catches a monster
+var reset = function () {
+	if (starting==1){
+		starting=0;
+		splashcount=0;
+		hero.x = canvas.width / 2; // hero to center , can be made random
+		hero.y = canvas.height / 2;
+		heroW=heroWO;
+		heroH=heroWO;
+	}
+	else{
+		splashcount=0;
+	}
+	// Throw the monster somewhere on the screen randomly
+
+	monster.x = Math.random() * (canvas.width - heroW); // can be the same as hero - if used random above
+	monster.y = Math.random() * (canvas.height - monstH); // 64
+	
+	
+};
+
+// Update game objects
+var update = function (modifier) {
+
+	if (uaKey in keysDown) { // Player holding up
+		heromove(0,-1);
+		//hero.y -= hero.speed * modifier; // down arrow reduce speed with modifier
+	}
+	if (daKey in keysDown) { // Player holding down
+		heromove(0,1);
+		//hero.y += hero.speed * modifier; // up arrow increase speed up
+	}
+	if (laKey in keysDown) { // Player holding left arrow reduce speed with modifier
+		heromove(-1,0);
+		//hero.x -= hero.speed * modifier;
+	}
+	if (raKey in keysDown) { // Player holding right arrow increase speed with modifier
+		heromove(1,0);
+		//hero.x += hero.speed * modifier;
+	}
+
+	// Are they touching? 32 px range check
+
+	    heroCx=parseInt(hero.x + heroW/2);
+		heroCy=parseInt(hero.y + heroH/2);
+		monCx=parseInt(monster.x + monstW/2);
+		monCy=parseInt(monster.y + monstH/2);
+		dx=giveDist(heroCx,heroCy,monCx,monCy);
+		//console.log (dx)
+	
+		if (dx < heroDx){
+			audioElement.play();
+			++monstersCaught;
+			if (monstersCaught < maxCatch){
+				heroW=heroW+8;
+				heroH=heroH+8;
+				heroDx=heroW/2;
+				heroDy=heroH/2;
+				splashcount=splashcount+1;
+				reset();
+			}
+		}
+};
+
+// Draw everything from this render function
+
+var renderBasic = function(){
+if (bgReady) {
+		//ctx.drawImage(bgImage, 0, 0);
+		for (var w = 0; w < canvas.width; w += bgImage.width) {
+			for (var h = 0; h < canvas.height; h  += bgImage.height) {
+				ctx.drawImage(bgImage, w, h);
+			}
+		}
+	}
+	
+	// Score
+	ctx.fillStyle = "rgb(251, 213, 59)";
+	ctx.font = "bolder 2.2em Roboto, kaputaunicode";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	dxt=(canvas.width/2)-150;
+	ctx.fillText("අල්ලං කැරට් : " + monstersCaught, dxt, 0);
+}
+
+var render = function () {
+/*
+	if (bgReady) {
+		//ctx.drawImage(bgImage, 0, 0);
+		for (var w = 0; w < canvas.width; w += bgImage.width) {
+			for (var h = 0; h < canvas.height; h  += bgImage.height) {
+				ctx.drawImage(bgImage, w, h);
+			}
+		}
+	}
+	
+	// Score
+	ctx.fillStyle = "rgb(251, 213, 59)";
+	ctx.font = "bolder 2.8em Roboto, kaputaunicode";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	dxt=(canvas.width/2)-150;
+	ctx.fillText("අල්ලං කැරට් : " + monstersCaught, dxt, -10);
+*/	
+
+	renderBasic();
+	
+		if (heroReady) {
+			ctx.drawImage(heroImage, hero.x, hero.y, heroW, heroH);
+			//console.log (splashcount)
+			if (splashcount >= 1 &&  splashcount <= 25) {
+				splashcount=splashcount+1;
+				fx=(hero.x+heroDx/2);
+				fy=(hero.y+heroDy/2);
+				ctx.drawImage(splashImage, fx, fy,heroW, heroH);
+			}
+		}
+
+		if (monsterReady) {
+			ctx.drawImage(monsterImage, monster.x, monster.y,monstW,monstH);
+		}
+			
+};
+
+function endgame(){
+	delete keysDown[raKey];
+	delete keysDown[laKey];
+	delete keysDown[uaKey];
+	delete keysDown[daKey];
+	clearInterval(myTimerVar);
+}
+
+
+
+var delta;
+var aniFrameId = undefined;
+// The main game loop
+var main = function () {
+	//console.log(aniFrameId);
+	if (monstersCaught >= maxCatch) {
+		window.cancelAnimationFrame(aniFrameId);
+		aniFrameId = undefined;
+		endgame();
+		renderBasic();
+		
+		if (heroReady) {
+			hero.x = canvas.width / 2; // hero to center , can be made random
+			hero.y = (canvas.height / 4);
+			ctx.drawImage(heroImage, hero.x, hero.y, heroWO, heroHO);	
+		} 
+		
+		if (giftReady) {
+		    x=-30;
+			//debugger;
+			y=canvas.height-giftH;
+			ctx.drawImage(giftImage, x,y-140,giftW,giftH);
+			ctx.drawImage(giftImage, x,y-240,giftW * .9,giftH * .9);
+			ctx.drawImage(giftImage, x,y-300,giftW * .8,giftH * .8);
+			//ctx.drawImage(giftImage, x+240,y+90,giftW * .7,giftH * .7);
+			//ctx.drawImage(giftImage, x+300,y+120,giftW * .6,giftH * .6);
+		}
+			
+	}
+	else{
+		var now = Date.now();
+		//var delta = now - then;
+		delta = now - then;
+		update(delta / 1000);
+		render();
+		then = now;
+		aniFrameId=requestAnimationFrame(main);
+	}
+	
+	//console.log(nowKey);
+	// RequestopWto do this again ASAP
+	
+	//console.log(aniFrameId);
+};
+
+var w = window;
+requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
+var then = Date.now();
+
+// Let's play this game!
+//var then = Date.now();
+//reset();
+//main();
+
+function myTimer() {
+    stopW.calc();
+    document.getElementById("xtimer").innerHTML = stopW.getSeconds();
+}
+
+
+function Stopwatch(){
+  var startTime, endTime, instance = this;
+  
+  
+  this.start = function (){
+    startTime = new Date();
+  }
+
+  this.stop = function (){
+    endTime = new Date();
+  }
+
+   this.calc = function (){
+    endTime = new Date();
+  }
+  
+  this.clear = function (){
+    startTime = null;
+    endTime = null;
+  }
+
+  this.getSeconds = function(){
+    if (!endTime){
+    return 0;
+    }
+    return Math.round((endTime.getTime() - startTime.getTime()) / 1000);
+  }
+
+  this.getMinutes = function(){
+    return instance.getSeconds() / 60;
+  }      
+  this.getHours = function(){
+    return instance.getSeconds() / 60 / 60;
+  }    
+  this.getDays = function(){
+    return instance.getHours() / 24;
+  }   
+}
+var myTimerVar;
+function startgame(){
+stopW.start(); //Start the stopwatch
+myTimerVar = setInterval(myTimer, 1000);
+// As a test, I use the setTimeout function to delay stopW.stop();	
+then = Date.now();
+reset();
+main();
+
+}
+
+var test_audio= document.createElement("audio"); //try and create sample audio element 
+//var test_video= document.createElement("video") //try and create sample video element
+var mediasupport={audio: (test_audio.play)? true : false};
+
+
+var moving=0;
+var moving ={"x":0, "y":0};
+
+
+function heromove (x,y){
+modifier=delta/1000;
+moving.x=x * hero.speed * modifier;
+moving.y=y * hero.speed * modifier;
+var xx=hero.x + moving.x;
+var yy=hero.y + moving.y;
+//console.log(xx);
+	if (xx < canvas.width-heroW && xx > 0){
+		hero.x = xx;
+	}
+	if (yy < canvas.height-heroH && yy > 0){
+		hero.y = yy;
+	}
+
+}
+
+
+//window.onload = function () { // calls when the 
+function loadKeys(){
+
+document.getElementById('leftArrow').addEventListener("click", function (e) {
+	//modifier=delta/500;
+	//hero.x -= hero.speed * modifier;
+	//heromove(hero,-1,0);
+	//delete keysDown[37];
+	delete keysDown[nowKey];
+	if (nowKey > 0) {
+		delete keysDown[nowKey];
+	}
+	nowKey=laKey;
+	keysDown[nowKey] = true;
+}, false);
+
+document.getElementById('rightArrow').addEventListener("click", function (e) {
+	if (nowKey > 0) {
+		delete keysDown[nowKey];
+	}
+	nowKey=raKey;
+	keysDown[nowKey] = true;
+}, false);
+	
+
+document.getElementById('upArrow').addEventListener("click", function (e) {
+	if (nowKey > 0) {
+		delete keysDown[nowKey];
+	}
+	nowKey=uaKey;
+	keysDown[nowKey] = true;
+}, false);
+	
+document.getElementById('downArrow').addEventListener("click", function (e) {
+	if (nowKey > 0) {
+		delete keysDown[nowKey];
+	}
+	nowKey=daKey;
+	keysDown[nowKey] = true;
+}, false);
+
+window.addEventListener("resize", resizeview);
+}
+
+
+
+function resizeview (){
+calcControls();
+canvas.width = window.innerWidth; // width of the canvas
+canvas.height = window.innerHeight-20;
+//hero.x = canvas.width / 2; // hero to center , can be made random
+//hero.y = canvas.height / 2;
+//monster.x = monstW + (Math.random() * (canvas.width - monstW)); // can be the same as hero - if used random above
+//monster.y = monstH + (Math.random() * (canvas.height - monstH));
+starting=1;
+startgame();			
+}
+
+function calcControls(){
+document.getElementById("xpage").style.width=window.innerWidth + "px";
+document.getElementById("xpage").style.height=window.innerHeight + 30 + "px";
+document.getElementById("ctrlpanel").style.width=window.innerWidth + "px"
+document.getElementById("ctrlpanel").style.top=window.innerHeight -220 + "px";
+document.getElementById("ctrlpanel").style.left="0px";
+document.getElementById("xtimer").style.left=window.innerWidth-100 + "px";
+//document.getElementById("xfooter").style.top=window.innerHeight -60 + "px";
+//document.getElementById("xfooter").style.left=(window.innerWidth /2) - 140  + "px";
+}
+
+
+
+function timex(){
+var d = new Date();
+var n = d.getTime();
+return n;
+}
+
+function giveDist(x1,y1,x2,y2){ 
+  if(!x2) x2=0; 
+  if(!y2) y2=0;
+  return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)); 
+}
+
+
+</script>
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1587716054877021',
+      xfbml      : true,
+      version    : 'v2.5'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+function fbShare(){
+var url=window.location.href;
+var xurl="https://www.facebook.com/ShilpaSayura/";
+location.href=xurl;
+}
+
+function twShare(){
+var url=window.location.href;
+var title=document.title;
+var xurl="http://twitter.com/intent/tweet?url="+url+"&text="+title.substring(33,title.length)+"&via=";
+location.href=xurl;
+}
+
+function gShare(){
+var url=window.location.href;
+var xurl="https://plus.google.com/share?url="+url;
+location.href=xurl;
+}
+
+function gShare(){
+var url=window.location.href;
+var xurl="https://plus.google.com/share?url="+url;
+location.href=xurl;
+}
+
+function liShare(){
+var url=window.location.href;
+var xurl="https://www.linkedin.com/cws/share="+url;
+location.href=xurl;
+}
+
+</script>
+
+
+
+<!-- 
+<div class="share xcenter"><img src="images/facebook.png" onclick="fbShare()" class="pointer">
+<img src="images/gplus.png" onclick="gShare()" class="pointer">
+<img src="images/twitter.png" onclick="twShare()" class="pointer">
+<!--<img src="linkedIn.png" onclick="liShare()">
+<img width="32" class="pointer" src="images/appsmart.jpg" onclick="appsmart()">
+</div>
+
+<div
+  class="fb-like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="true">
+</div>-->
+</body>
+</html>
